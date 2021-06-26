@@ -4,12 +4,12 @@ import {
   game,
   gameState,
   GAME_DETAILS,
-} from "../interfaces";
+} from "../../interfaces";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
-import { tableName, winSpaces } from "../config";
+import { tableName, winSpaces } from "../../config";
 import { v4 as uuidv4 } from "uuid";
-import { ErrorMessages } from "../constants";
-import { documentClient } from "../utils/dynamo";
+import { ErrorMessages } from "../../constants";
+import { documentClient } from "../../utils/dynamo";
 
 export async function createGameService(
   createGameRequest: createGameRequest

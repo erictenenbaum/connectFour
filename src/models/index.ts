@@ -1,3 +1,11 @@
 export { getDynamoGameItem } from "./game/getGameById";
+export { getInprogressGames } from "./game/getInprogressGames";
 export { getMovesByGameId } from "./move/getMovesByGameId";
 export { getMoveByMoveNumber } from "./move/getMoveByMoveNumber";
+export { dynamoMoveItemQuery } from "./move/dynamoMoveItemQuery";
+export { getAllPlayerMoves } from "./move/getAllPlayerMoves";
+export { getLastRowInColumn } from "./move/getLastRowInColumn";
+export { updateGameAndWriteMove } from "./move/updateGameAndWriteMove";
+export { writeMove } from "./move/writeMove";
+export { updateGameAndWriteQuitMove } from "./move/updateGameAndWriteQuitMove";
+export { writeQuitMove } from "./move/writeQuitMove";

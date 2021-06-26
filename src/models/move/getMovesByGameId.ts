@@ -11,7 +11,7 @@ export async function getMovesByGameId(
     KeyConditionExpression: "pk = :pk AND begins_with(sk, :sk)",
     ExpressionAttributeValues: {
       ":pk": gameId,
-      ":sk": "MOVES#",
+      ":sk": "MOVE#",
     },
   };
 

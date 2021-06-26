@@ -2,7 +2,7 @@ import { APIGatewayEvent, Context } from "aws-lambda";
 import { StatusCodes } from "http-status-codes";
 import { ErrorMessages } from "../constants";
 import { createGameRequest, game, JSendResponseWrapper } from "../interfaces";
-import { createGameService } from "../services/connectFourService";
+import { createGameService } from "../services/gamePlayService/createGameService";
 import * as JSend from "../utils/jSendResponse";
 import { isValidateCreateGameRequest } from "../utils/validateRequest";
 
