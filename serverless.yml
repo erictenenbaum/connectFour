@@ -1,0 +1,179 @@
+service: connect-four-serverless
+org: erictenenbaum10
+
+provider:
+  name: aws
+  stage: local
+  region: ${env:APP_AWS_REGION}
+  runtime: nodejs14.x
+  environment:
+    accountId: "#{AWS::AccountId}"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:GetItem
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.accountId}:table/ConnectFour"
+
+functions:
+  createGame:
+    handler: src/handlers/createGame.createGame
+    events:
+      - http:
+          path: /drop_token
+          method: post
+          private: true
+  createMove:
+    handler: src/handlers/createMove.createMove
+    events:
+      - http:
+          path: /drop_token/{gameId}/{playerId}
+          method: post
+          private: true
+          request:
+            parameters:
+              paths:
+                gameId: true
+                playerId: true
+  getGames:
+    handler: src/handlers/getGames.getGames
+    events:
+      - http:
+          path: /drop_token
+          method: get
+          private: true
+  getGame:
+    handler: src/handlers/getGame.getGame
+    events:
+      - http:
+          path: /drop_token/{gameId}
+          method: get
+          private: true
+          request:
+            parameters:
+              paths:
+                gameId: true
+  getMoves:
+    handler: src/handlers/getMoves.getMoves
+    events:
+      - http:
+          path: /drop_token/{gameId}/moves
+          method: get
+          private: true
+          request:
+            parameters:
+              paths:
+                gameId: true
+  getMove:
+    handler: src/handlers/getMove.getMove
+    events:
+      - http:
+          path: /drop_token/{gameId}/moves/{move_number}
+          method: get
+          private: true
+          request:
+            parameters:
+              paths:
+                gameId: true
+                move_number: true
+  removePlayer:
+    handler: src/handlers/removePlayer.removePlayer
+    events:
+      - http:
+          path: /drop_token/{gameId}/{playerId}
+          method: delete
+          private: true
+          request:
+            parameters:
+              paths:
+                gameId: true
+                playerId: true
+
+resources:
+  Resources:
+    Connect4DynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: move_player
+            AttributeType: S
+          - AttributeName: move_column
+            AttributeType: N
+          - AttributeName: game_state
+            AttributeType: N
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        GlobalSecondaryIndexes:
+          - IndexName: pk-move_player-index
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: move_player
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          - IndexName: pk-move_column-index
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: move_column
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          - IndexName: game_state-index
+            KeySchema:
+              - AttributeName: game_state
+                KeyType: HASH
+            Projection:
+              # TODO: Change TO KEYS_ONLY
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        TableName: "ConnectFour"
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-plugin-typescript
+  - serverless-dynamodb-local
+  - serverless-offline
+  # - serverless-pseudo-parameters
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  serverless-offline:
+    noPrependStageInUrl: true
+  dynamodb:
+    stages:
+      - local
+    start:
+      port: 8000
+      host: localhost
+      inMemory: false
+      dbPath: .
+      migrate: true
+      seed: false
+      sharedDb: true
+    seed:
+      test:
+        sources:
+          - table: ConnectFour
+            sources: [./data-examples/connect-four-seed-data.json]

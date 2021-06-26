@@ -1,0 +1,1 @@
+export { isValidateCreateGameRequest } from "./validateCreateGameRequest";
