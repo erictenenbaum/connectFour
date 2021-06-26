@@ -1,8 +1,6 @@
 export enum ErrorMessages {
   InternalServerError = "Internal Server Error",
   WriteRequestFailed = "Failed to write entity",
-  DeleteRequestFailed = "Failed to delete entity",
-  RecordNotFound = "Record not found",
   MalformedRequest = "Malformed Request",
   GameMovesNotFound = "Game/Moves Not Found",
   GamesNotFound = "Game(s) Not Found",
