@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "sls offline start --apiKey localKey",
+    "serve": "sls offline start --environment local --apiKey localKey",
     "createDynamoTable": "sls dynamodb migrate",
     "build": "tsc",
     "build:clean": "tsc --build --clean"
