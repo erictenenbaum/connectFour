@@ -13,7 +13,7 @@ export async function createGame(
   try {
     if (!event.body) {
       return JSend.error(
-        ErrorMessages.InvalidRequestBody,
+        ErrorMessages.MalformedRequest,
         null,
         StatusCodes.BAD_REQUEST
       );
@@ -28,7 +28,7 @@ export async function createGame(
       !isValidateCreateGameRequest(createGameRequest)
     ) {
       return JSend.error(
-        ErrorMessages.InvalidRequestBody,
+        ErrorMessages.MalformedRequest,
         null,
         StatusCodes.BAD_REQUEST
       );
@@ -37,6 +37,9 @@ export async function createGame(
     const createdGame: game = await createGameService(createGameRequest);
     return JSend.success(createdGame);
   } catch (error) {
-    return JSend.catchErrors(error);
+    return JSend.error(
+      ErrorMessages.InternalServerError,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
   }
 }

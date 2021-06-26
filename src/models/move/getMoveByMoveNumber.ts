@@ -2,6 +2,7 @@ import { documentClient } from "../../utils/dynamo";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { tableName } from "../../config";
 import { dynamoMoveItem } from "../../interfaces/move";
+import { ErrorMessages } from "../../constants";
 
 export async function getMoveByMoveNumber(
   gameId: string,
@@ -21,7 +22,7 @@ export async function getMoveByMoveNumber(
       .promise();
 
     if (!getItemOutput.Item) {
-      throw new Error("404");
+      throw new Error(ErrorMessages.GameMovesNotFound);
     }
 
     return getItemOutput.Item as dynamoMoveItem;

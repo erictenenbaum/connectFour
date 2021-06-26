@@ -1,3 +1,4 @@
+import { ErrorMessages } from "../../constants";
 import { dynamoMoveItem } from "../../interfaces";
 import {
   getMovesByGameIdResponse,
@@ -13,7 +14,7 @@ export async function getMovesByGameIdService(
     const dynamoMoveItems: dynamoMoveItem[] = await getMovesByGameId(gameId);
 
     if (!dynamoMoveItems.length) {
-      throw new Error("404");
+      throw new Error(ErrorMessages.GameMovesNotFound);
     }
 
     const getMovesByGameIdResponseArray: (
@@ -43,6 +44,6 @@ export async function getMovesByGameIdService(
 
     return getMovesByGameIdResponse;
   } catch (error) {
-    throw error;
+    throw new Error(ErrorMessages.InternalServerError);
   }
 }

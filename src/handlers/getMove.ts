@@ -1,5 +1,6 @@
 import { APIGatewayEvent, Context } from "aws-lambda";
 import { StatusCodes } from "http-status-codes";
+import { ErrorMessages } from "../constants";
 import { JSendResponseWrapper } from "../interfaces";
 import { moveResponseItem } from "../interfaces/move";
 import { getMoveByMoveNumberService } from "../services/gamePlayService/getMoveByMoveNumberService";
@@ -15,7 +16,10 @@ export async function getMove(
       !event.pathParameters.gameId ||
       !event.pathParameters.move_number
     ) {
-      throw new Error("400");
+      return JSend.error(
+        ErrorMessages.MalformedRequest,
+        StatusCodes.BAD_REQUEST
+      );
     }
 
     const moveResponseItem: moveResponseItem = await getMoveByMoveNumberService(
@@ -24,6 +28,15 @@ export async function getMove(
     );
     return JSend.success(moveResponseItem, StatusCodes.OK);
   } catch (error) {
-    return JSend.catchErrors(error);
+    if (error.message === ErrorMessages.GameMovesNotFound) {
+      return JSend.error(
+        ErrorMessages.GameMovesNotFound,
+        StatusCodes.NOT_FOUND
+      );
+    }
+    return JSend.error(
+      ErrorMessages.InternalServerError,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
   }
 }

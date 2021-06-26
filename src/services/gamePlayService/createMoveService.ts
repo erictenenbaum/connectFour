@@ -6,6 +6,7 @@ import {
   getLastRowInColumn,
   updateGameAndWriteMove,
 } from "../../models";
+import { ErrorMessages } from "../../constants";
 
 export async function createMoveService(
   createMoveRequest: createMoveRequest
@@ -17,16 +18,20 @@ export async function createMoveService(
     );
 
     if (!dynamoGameItem) {
-      throw new Error("Illegal Move - Game Not Found.");
+      throw new Error(ErrorMessages.GameMovesNotFound);
     }
 
     if (!isLegalMove(playerId, column, dynamoGameItem)) {
-      throw new Error("Illegal Move");
+      throw new Error(ErrorMessages.IllegalMove);
+    }
+
+    if (dynamoGameItem.game_current_player !== playerId) {
+      throw new Error(ErrorMessages.NotPlayerTurn);
     }
 
     const lastRowInColumn: number = await getLastRowInColumn(gameId, column);
     if (lastRowInColumn === dynamoGameItem.game_rows) {
-      throw new Error("Illegal Move");
+      throw new Error(ErrorMessages.IllegalMove);
     }
 
     // get all moves by this player (plus current move) to check if they won, or game ended in a tie, then write to DB:
@@ -70,8 +75,7 @@ export async function createMoveService(
     // write move:
     return await updateGameAndWriteMove(currentMove, dynamoGameItem, false);
   } catch (error) {
-    console.log("ERROR IN SERVICE: ", error);
-    throw new Error();
+    throw error;
   }
 }
 
@@ -86,10 +90,6 @@ function isLegalMove(
   }
 
   if (!dynamoGameItem.game_players.includes(playerId)) {
-    return false;
-  }
-
-  if (dynamoGameItem.game_current_player !== playerId) {
     return false;
   }
 

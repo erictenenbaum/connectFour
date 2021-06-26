@@ -1,3 +1,4 @@
+import { ErrorMessages } from "../../constants";
 import { dynamoGameItem, getGameByIdResponse } from "../../interfaces";
 import { getDynamoGameItem } from "../../models";
 
@@ -7,7 +8,7 @@ export async function getGameByIdService(
   try {
     const game: dynamoGameItem | null = await getDynamoGameItem(gameId);
     if (!game) {
-      throw Error("404");
+      throw Error(ErrorMessages.GameMovesNotFound);
     }
 
     const response: getGameByIdResponse = {

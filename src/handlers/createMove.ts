@@ -16,7 +16,7 @@ export async function createMove(
 
     if (!createMoveRequest) {
       return JSend.error(
-        ErrorMessages.InvalidRequestBody,
+        ErrorMessages.MalformedRequest,
         null,
         StatusCodes.BAD_REQUEST
       );
@@ -26,7 +26,25 @@ export async function createMove(
     );
     return JSend.success({ move: createMoveResponse });
   } catch (error) {
-    return JSend.catchErrors(error);
+    switch (error.message) {
+      case ErrorMessages.GameMovesNotFound:
+        return JSend.error(
+          ErrorMessages.GameMovesNotFound,
+          StatusCodes.NOT_FOUND
+        );
+
+      case ErrorMessages.IllegalMove:
+        return JSend.error(ErrorMessages.IllegalMove, StatusCodes.BAD_REQUEST);
+
+      case ErrorMessages.NotPlayerTurn:
+        return JSend.error(ErrorMessages.NotPlayerTurn, StatusCodes.CONFLICT);
+
+      default:
+        return JSend.error(
+          ErrorMessages.InternalServerError,
+          StatusCodes.INTERNAL_SERVER_ERROR
+        );
+    }
   }
 }
 
