@@ -30,18 +30,28 @@ export async function createMove(
       case ErrorMessages.GameMovesNotFound:
         return JSend.error(
           ErrorMessages.GameMovesNotFound,
+          null,
           StatusCodes.NOT_FOUND
         );
 
       case ErrorMessages.IllegalMove:
-        return JSend.error(ErrorMessages.IllegalMove, StatusCodes.BAD_REQUEST);
+        return JSend.error(
+          ErrorMessages.IllegalMove,
+          null,
+          StatusCodes.BAD_REQUEST
+        );
 
       case ErrorMessages.NotPlayerTurn:
-        return JSend.error(ErrorMessages.NotPlayerTurn, StatusCodes.CONFLICT);
+        return JSend.error(
+          ErrorMessages.NotPlayerTurn,
+          null,
+          StatusCodes.CONFLICT
+        );
 
       default:
         return JSend.error(
           ErrorMessages.InternalServerError,
+          null,
           StatusCodes.INTERNAL_SERVER_ERROR
         );
     }

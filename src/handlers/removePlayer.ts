@@ -17,6 +17,7 @@ export async function removePlayer(
     ) {
       return JSend.error(
         ErrorMessages.MalformedRequest,
+        null,
         StatusCodes.BAD_REQUEST
       );
     }
@@ -29,15 +30,17 @@ export async function removePlayer(
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,
+        null,
         StatusCodes.NOT_FOUND
       );
     }
 
     if (error.message === ErrorMessages.GameIsOver) {
-      return JSend.error(ErrorMessages.GameIsOver, StatusCodes.GONE);
+      return JSend.error(ErrorMessages.GameIsOver, null, StatusCodes.GONE);
     }
     return JSend.error(
       ErrorMessages.InternalServerError,
+      null,
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }

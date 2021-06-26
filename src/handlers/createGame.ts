@@ -37,9 +37,6 @@ export async function createGame(
     const createdGame: game = await createGameService(createGameRequest);
     return JSend.success(createdGame);
   } catch (error) {
-    return JSend.error(
-      ErrorMessages.InternalServerError,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    );
+    return JSend.error(ErrorMessages.InternalServerError);
   }
 }

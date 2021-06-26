@@ -2,29 +2,29 @@ import { documentClient } from "../../utils/dynamo";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { tableName } from "../../config";
 import { dynamoMoveItem } from "../../interfaces";
+import { dynamoMoveItemQuery } from "./dynamoMoveItemQuery";
 
 export async function getMovesByGameId(
-  gameId: string
+  gameId: string,
+  range?: { start?: number; until?: number }
 ): Promise<dynamoMoveItem[]> {
   const queryInput: DocumentClient.QueryInput = {
     TableName: tableName,
-    KeyConditionExpression: "pk = :pk AND begins_with(sk, :sk)",
+    KeyConditionExpression: "pk = :pk AND sk BETWEEN :start AND :until",
     ExpressionAttributeValues: {
       ":pk": gameId,
-      ":sk": "MOVE#",
+      ":start": range?.start ? `MOVE#${range.start}` : `MOVE#1`,
+      ":until": range?.until
+        ? `MOVE#${range.until}`
+        : `MOVE#${Number.MAX_SAFE_INTEGER}`,
     },
   };
 
   try {
-    const queryOutput: DocumentClient.QueryOutput = await documentClient
-      .query(queryInput)
-      .promise();
-
-    if (queryOutput.Items) {
-      return queryOutput.Items as dynamoMoveItem[];
-    }
-
-    return [];
+    const dynamoMoveItems: dynamoMoveItem[] = await dynamoMoveItemQuery(
+      queryInput
+    );
+    return dynamoMoveItems;
   } catch (error) {
     throw error;
   }

@@ -12,13 +12,18 @@ export async function getGames(
   try {
     const gameIds: string[] = await getInprogressGamesService();
     if (!gameIds.length) {
-      return JSend.error(ErrorMessages.GamesNotFound, StatusCodes.NOT_FOUND);
+      return JSend.error(
+        ErrorMessages.GamesNotFound,
+        null,
+        StatusCodes.NOT_FOUND
+      );
     }
 
     return JSend.success({ games: gameIds }, StatusCodes.OK);
   } catch (error) {
     return JSend.error(
       ErrorMessages.InternalServerError,
+      null,
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }

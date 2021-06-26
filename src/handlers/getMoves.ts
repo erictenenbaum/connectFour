@@ -15,19 +15,41 @@ export async function getMoves(
   }
 
   try {
+    const range: { start?: number; until?: number } = {};
+    if (
+      event.queryStringParameters &&
+      event.queryStringParameters.start &&
+      Number.isInteger(Number.parseInt(event.queryStringParameters.start))
+    ) {
+      range.start = Number.parseInt(event.queryStringParameters.start);
+    }
+
+    if (
+      event.queryStringParameters &&
+      event.queryStringParameters.until &&
+      Number.isInteger(Number.parseInt(event.queryStringParameters.until))
+    ) {
+      range.until = Number.parseInt(event.queryStringParameters.until);
+    }
+
     const getMovesByGameIdResponse: getMovesByGameIdResponse =
-      await getMovesByGameIdService(event.pathParameters.gameId);
+      await getMovesByGameIdService(
+        event.pathParameters.gameId,
+        range.start || range.until ? range : undefined
+      );
 
     return JSend.success(getMovesByGameIdResponse, StatusCodes.OK);
   } catch (error) {
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,
+        null,
         StatusCodes.NOT_FOUND
       );
     }
     return JSend.error(
       ErrorMessages.InternalServerError,
+      null,
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }

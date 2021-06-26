@@ -18,6 +18,7 @@ export async function getMove(
     ) {
       return JSend.error(
         ErrorMessages.MalformedRequest,
+        null,
         StatusCodes.BAD_REQUEST
       );
     }
@@ -31,11 +32,13 @@ export async function getMove(
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,
+        null,
         StatusCodes.NOT_FOUND
       );
     }
     return JSend.error(
       ErrorMessages.InternalServerError,
+      null,
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }

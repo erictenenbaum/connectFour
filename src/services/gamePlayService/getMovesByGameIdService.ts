@@ -8,10 +8,14 @@ import {
 import { getMovesByGameId } from "../../models";
 
 export async function getMovesByGameIdService(
-  gameId: string
+  gameId: string,
+  range?: { start?: number; until?: number }
 ): Promise<getMovesByGameIdResponse> {
   try {
-    const dynamoMoveItems: dynamoMoveItem[] = await getMovesByGameId(gameId);
+    const dynamoMoveItems: dynamoMoveItem[] = await getMovesByGameId(
+      gameId,
+      range
+    );
 
     if (!dynamoMoveItems.length) {
       throw new Error(ErrorMessages.GameMovesNotFound);
@@ -44,6 +48,6 @@ export async function getMovesByGameIdService(
 
     return getMovesByGameIdResponse;
   } catch (error) {
-    throw new Error(ErrorMessages.InternalServerError);
+    throw error;
   }
 }

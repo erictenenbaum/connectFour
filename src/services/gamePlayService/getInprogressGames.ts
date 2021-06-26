@@ -5,7 +5,6 @@ export async function getInprogressGamesService(): Promise<string[]> {
     const inProgressGames: string[] = await getInprogressGames();
     return inProgressGames;
   } catch (error) {
-    console.log("ERROR: ", error);
-    throw new Error();
+    throw error;
   }
 }
