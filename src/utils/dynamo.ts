@@ -6,4 +6,8 @@ export const documentClient: DocumentClient =
         region: "localhost",
         endpoint: "http://localhost:8000",
       })
-    : new DocumentClient();
+    : new DocumentClient({
+        region: process.env.APP_AWS_REGION,
+        accessKeyId: process.env.ACCESS_KEY_ID,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      });

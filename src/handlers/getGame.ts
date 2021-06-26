@@ -23,6 +23,7 @@ export async function getGame(
     );
     return JSend.success(gameResponse, StatusCodes.OK);
   } catch (error) {
+    console.log("Error in getGame: ", error);
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,

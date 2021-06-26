@@ -27,6 +27,7 @@ export async function removePlayer(
     );
     return JSend.success(null, StatusCodes.ACCEPTED);
   } catch (error) {
+    console.log("Error in removePlayer: ", error);
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,

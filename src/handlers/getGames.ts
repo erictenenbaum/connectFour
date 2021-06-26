@@ -21,6 +21,7 @@ export async function getGames(
 
     return JSend.success({ games: gameIds }, StatusCodes.OK);
   } catch (error) {
+    console.log("Error in getGame: ", error);
     return JSend.error(
       ErrorMessages.InternalServerError,
       null,

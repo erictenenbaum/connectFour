@@ -4,7 +4,7 @@ org: erictenenbaum10
 provider:
   name: aws
   stage: local
-  region: ${env:APP_AWS_REGION, 'us-west-1'}
+  region: "us-west-1"
   runtime: nodejs14.x
   environment:
     accountId: "#{AWS::AccountId}"
@@ -25,14 +25,14 @@ functions:
       - http:
           path: /drop_token
           method: post
-          private: true
+          private: false
   createMove:
     handler: src/handlers/createMove.createMove
     events:
       - http:
           path: /drop_token/{gameId}/{playerId}
           method: post
-          private: true
+          private: false
           request:
             parameters:
               paths:
@@ -44,14 +44,14 @@ functions:
       - http:
           path: /drop_token
           method: get
-          private: true
+          private: false
   getGame:
     handler: src/handlers/getGame.getGame
     events:
       - http:
           path: /drop_token/{gameId}
           method: get
-          private: true
+          private: false
           request:
             parameters:
               paths:
@@ -62,7 +62,7 @@ functions:
       - http:
           path: /drop_token/{gameId}/moves
           method: get
-          private: true
+          private: false
           request:
             parameters:
               paths:
@@ -73,7 +73,7 @@ functions:
       - http:
           path: /drop_token/{gameId}/moves/{move_number}
           method: get
-          private: true
+          private: false
           request:
             parameters:
               paths:
@@ -85,7 +85,7 @@ functions:
       - http:
           path: /drop_token/{gameId}/{playerId}
           method: delete
-          private: true
+          private: false
           request:
             parameters:
               paths:
@@ -155,7 +155,7 @@ plugins:
   - serverless-plugin-typescript
   - serverless-dynamodb-local
   - serverless-offline
-  # - serverless-pseudo-parameters
+  - serverless-pseudo-parameters
 
 custom:
   stage: ${opt:stage, self:provider.stage}

@@ -40,6 +40,7 @@ export async function getMoves(
 
     return JSend.success(getMovesByGameIdResponse, StatusCodes.OK);
   } catch (error) {
+    console.log("Error in getMoves: ", error);
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,

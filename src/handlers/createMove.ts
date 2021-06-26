@@ -26,6 +26,7 @@ export async function createMove(
     );
     return JSend.success({ move: createMoveResponse });
   } catch (error) {
+    console.log("Error in createMove: ", error);
     switch (error.message) {
       case ErrorMessages.GameMovesNotFound:
         return JSend.error(

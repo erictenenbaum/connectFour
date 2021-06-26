@@ -29,6 +29,7 @@ export async function getMove(
     );
     return JSend.success(moveResponseItem, StatusCodes.OK);
   } catch (error) {
+    console.log("Error in getMove: ", error);
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,
