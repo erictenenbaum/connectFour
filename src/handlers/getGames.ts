@@ -4,11 +4,17 @@ import { ErrorMessages } from "../constants";
 import { JSendResponseWrapper } from "../interfaces";
 import { getInprogressGamesService } from "../services/gamePlayService/getInprogressGames";
 import * as JSend from "../utils/jSendResponse";
+import * as BunyanLogger from "bunyan";
+import Logger from "../utils/logger/logger";
 
 export async function getGames(
-  _: APIGatewayEvent,
+  event: APIGatewayEvent,
   __: Context
 ): Promise<JSendResponseWrapper> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Get Games - Handler",
+  });
+  logger.info({ event }, "APIGateway Event");
   try {
     const gameIds: string[] = await getInprogressGamesService();
     if (!gameIds.length) {
@@ -21,7 +27,7 @@ export async function getGames(
 
     return JSend.success({ games: gameIds }, StatusCodes.OK);
   } catch (error) {
-    console.log("Error in getGame: ", error);
+    logger.debug({ err: error }, "Error in Get Games Handler");
     return JSend.error(
       ErrorMessages.InternalServerError,
       null,

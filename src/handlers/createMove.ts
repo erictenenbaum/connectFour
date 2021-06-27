@@ -4,17 +4,27 @@ import { ErrorMessages } from "../constants";
 import { createMoveRequest, JSendResponseWrapper } from "../interfaces";
 import { createMoveService } from "../services/gamePlayService/createMoveService";
 import * as JSend from "../utils/jSendResponse";
+import * as BunyanLogger from "bunyan";
+import Logger from "../utils/logger/logger";
 
 export async function createMove(
   event: APIGatewayEvent,
   _: Context
 ): Promise<JSendResponseWrapper> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Create Move - Handler",
+  });
+  logger.info({ event }, "APIGateway Event");
   try {
     // validate user input
     const createMoveRequest: createMoveRequest | null =
       validateAndParseInput(event);
 
     if (!createMoveRequest) {
+      logger.debug(
+        { createMoveRequest },
+        "create move request didn't pass validation"
+      );
       return JSend.error(
         ErrorMessages.MalformedRequest,
         null,
@@ -24,9 +34,10 @@ export async function createMove(
     const createMoveResponse: string = await createMoveService(
       createMoveRequest
     );
+    logger.info({ createMoveRequest }, "successfully created move");
     return JSend.success({ move: createMoveResponse });
   } catch (error) {
-    console.log("Error in createMove: ", error);
+    logger.debug({ err: error }, "Error caught in create move handler");
     switch (error.message) {
       case ErrorMessages.GameMovesNotFound:
         return JSend.error(

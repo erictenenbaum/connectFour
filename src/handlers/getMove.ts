@@ -5,11 +5,17 @@ import { JSendResponseWrapper } from "../interfaces";
 import { moveResponseItem } from "../interfaces/move";
 import { getMoveByMoveNumberService } from "../services/gamePlayService/getMoveByMoveNumberService";
 import * as JSend from "../utils/jSendResponse";
+import * as BunyanLogger from "bunyan";
+import Logger from "../utils/logger/logger";
 
 export async function getMove(
   event: APIGatewayEvent,
   _: Context
 ): Promise<JSendResponseWrapper> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Get Move - Handler",
+  });
+  logger.info({ event }, "APIGateway Event");
   try {
     if (
       !event.pathParameters ||
@@ -27,9 +33,10 @@ export async function getMove(
       event.pathParameters.gameId,
       Number.parseInt(event.pathParameters.move_number)
     );
+    logger.info({ moveResponseItem }, "successful Get Move");
     return JSend.success(moveResponseItem, StatusCodes.OK);
   } catch (error) {
-    console.log("Error in getMove: ", error);
+    logger.debug({ err: error }, "Error in Get Move Handler");
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,
