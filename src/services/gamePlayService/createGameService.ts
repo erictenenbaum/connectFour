@@ -10,10 +10,17 @@ import { tableName, winSpaces } from "../../config";
 import { v4 as uuidv4 } from "uuid";
 import { ErrorMessages } from "../../constants";
 import { documentClient } from "../../utils/dynamo";
+import * as BunyanLogger from "bunyan";
+import Logger from "../../utils/logger/logger";
 
 export async function createGameService(
   createGameRequest: createGameRequest
 ): Promise<game> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Create Game - Service",
+  });
+  logger.info({ createGameRequest }, "Create Game Request - Service Layer");
+
   const gameId: string = uuidv4();
   const gameItem: dynamoGameItem = {
     pk: gameId,
@@ -47,6 +54,7 @@ export async function createGameService(
       rows: createGameRequest.rows,
     };
   } catch (error) {
+    logger.debug({ err: error }, "Error in Create Game Service");
     throw new Error(ErrorMessages.WriteRequestFailed);
   }
 }

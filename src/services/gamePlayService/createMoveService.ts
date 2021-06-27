@@ -7,30 +7,45 @@ import {
   updateGameAndWriteMove,
 } from "../../models";
 import { ErrorMessages } from "../../constants";
+import * as BunyanLogger from "bunyan";
+import Logger from "../../utils/logger/logger";
 
 export async function createMoveService(
   createMoveRequest: createMoveRequest
 ): Promise<string> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Create Move - Service",
+  });
+  logger.info({ createMoveRequest }, "Create Move Request - Service Layer");
+
   try {
     const { gameId, playerId, column } = createMoveRequest;
     const dynamoGameItem: dynamoGameItem | null = await getDynamoGameItem(
       gameId
     );
+    logger.info(
+      { game: dynamoGameItem },
+      "Game we are adding a move to - Service"
+    );
 
     if (!dynamoGameItem) {
+      logger.debug("Game Not Found - Service");
       throw new Error(ErrorMessages.GameMovesNotFound);
     }
 
     if (!isLegalMove(playerId, column, dynamoGameItem)) {
+      logger.debug("Illegal Move - Service");
       throw new Error(ErrorMessages.IllegalMove);
     }
 
     if (dynamoGameItem.game_current_player !== playerId) {
+      logger.debug("Not Player's Turn - Service");
       throw new Error(ErrorMessages.NotPlayerTurn);
     }
 
     const lastRowInColumn: number = await getLastRowInColumn(gameId, column);
     if (lastRowInColumn === dynamoGameItem.game_rows) {
+      logger.debug("Illegal Move - Not enough space in collumm to make move");
       throw new Error(ErrorMessages.IllegalMove);
     }
 
@@ -45,12 +60,17 @@ export async function createMoveService(
       row: lastRowInColumn + 1,
     };
     moves.push(currentMove);
+    logger.info(
+      { moves },
+      `All Moves (including current move) for Player: ${playerId}`
+    );
 
     // check if they've won
     if (
       moves.length + 1 >= dynamoGameItem.winSpaces &&
       checkWin(moves, dynamoGameItem.winSpaces)
     ) {
+      logger.info(`Player ${playerId} won the game ${gameId}`);
       return await updateGameAndWriteMove(
         currentMove,
         dynamoGameItem,
@@ -64,6 +84,7 @@ export async function createMoveService(
       dynamoGameItem.game_played_moves + 1 ===
       dynamoGameItem.game_columns * dynamoGameItem.game_rows
     ) {
+      logger.info(`Game ${gameId} ends in a tie`);
       return await updateGameAndWriteMove(
         currentMove,
         dynamoGameItem,
@@ -73,6 +94,7 @@ export async function createMoveService(
     }
 
     // write move:
+    logger.info("No win or tie - Update Game and Write Move");
     return await updateGameAndWriteMove(currentMove, dynamoGameItem, false);
   } catch (error) {
     throw error;
