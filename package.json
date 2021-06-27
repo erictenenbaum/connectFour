@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "sls offline start --environment local --apiKey localKey | npx bunyan",
     "createDynamoTable": "sls dynamodb migrate",
+    "dynamo:install": "sls dynamodb install --apiKey localKey",
     "build": "tsc",
     "build:clean": "tsc --build --clean"
   },
