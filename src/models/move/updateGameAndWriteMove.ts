@@ -3,6 +3,8 @@ import { move, dynamoGameItem } from "../../interfaces";
 import { tableName } from "../../config";
 import { documentClient } from "../../utils/dynamo";
 import { writeMove } from "./writeMove";
+import * as BunyanLogger from "bunyan";
+import Logger from "../../utils/logger/logger";
 
 export async function updateGameAndWriteMove(
   currentMove: move,
@@ -10,10 +12,20 @@ export async function updateGameAndWriteMove(
   isGameOver: boolean,
   isWin?: boolean
 ): Promise<string> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Update Game and Write Move - Model",
+  });
+  logger.info(
+    { currentMove, dynamoGameItem, isGameOver, isWin },
+    "Params for Update Game and Write Move - Model"
+  );
+
   const gameCurrentPlayer: string = getGameCurrentPlayer(
     currentMove,
     dynamoGameItem
   );
+
+  logger.info({ currentPlayer: gameCurrentPlayer }, "Current Player");
 
   let updateExpression =
     "SET game_current_player = :gcp, game_played_moves = :gpm";
@@ -38,6 +50,8 @@ export async function updateGameAndWriteMove(
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionAttributeValues,
   };
+
+  logger.info({ writeRequest: updateItemInput }, "Write Request");
 
   await documentClient.update(updateItemInput).promise();
   return writeMove(currentMove, dynamoGameItem);

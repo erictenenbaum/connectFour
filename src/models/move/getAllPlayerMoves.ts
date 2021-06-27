@@ -2,11 +2,18 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { pkMovePlayerIndex, tableName } from "../../config";
 import { dynamoMoveItem, move } from "../../interfaces";
 import { dynamoMoveItemQuery } from "./dynamoMoveItemQuery";
+import * as BunyanLogger from "bunyan";
+import Logger from "../../utils/logger/logger";
 
 export async function getAllPlayerMoves(
   gameId: string,
   playerId: string
 ): Promise<move[]> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Get All Player Moves (Get Moves) - Model",
+  });
+  logger.info({ gameId, playerId }, "gameId, playerId - Model");
+
   const movePlayerQuery: DocumentClient.QueryInput = {
     TableName: tableName,
     IndexName: pkMovePlayerIndex,
@@ -17,9 +24,13 @@ export async function getAllPlayerMoves(
     },
   };
 
+  logger.info({ query: movePlayerQuery }, "Query");
+
   let dynamoMoveItems: dynamoMoveItem[] = await dynamoMoveItemQuery(
     movePlayerQuery
   );
+
+  logger.info({ result: dynamoMoveItems }, "Dynamo Result");
 
   // Appeasing TypeScript with the Partial because it is not picking up that I am filtering out Quit Moves (Partials)
   const moves: Partial<move>[] = dynamoMoveItems

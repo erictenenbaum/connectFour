@@ -1,13 +1,22 @@
-import { documentClient } from "../../utils/dynamo";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { tableName } from "../../config";
 import { dynamoMoveItem } from "../../interfaces";
 import { dynamoMoveItemQuery } from "./dynamoMoveItemQuery";
+import * as BunyanLogger from "bunyan";
+import Logger from "../../utils/logger/logger";
 
 export async function getMovesByGameId(
   gameId: string,
   range?: { start?: number; until?: number }
 ): Promise<dynamoMoveItem[]> {
+  const logger: BunyanLogger = Logger.getLogger({
+    logGroup: "Get Moves By Game Id (Get Moves) - Model",
+  });
+  logger.info(
+    { gameId, range },
+    "gameId, range (optional, might be undefined) - Model"
+  );
+
   const queryInput: DocumentClient.QueryInput = {
     TableName: tableName,
     KeyConditionExpression: "pk = :pk AND sk BETWEEN :start AND :until",
@@ -20,12 +29,17 @@ export async function getMovesByGameId(
     },
   };
 
+  logger.info({ query: queryInput }, "Query");
+
   try {
     const dynamoMoveItems: dynamoMoveItem[] = await dynamoMoveItemQuery(
       queryInput
     );
+
+    logger.info({ result: dynamoMoveItems }, "Dynamo Response");
     return dynamoMoveItems;
   } catch (error) {
+    logger.debug({ err: error }, "Error in the Get Moves Model");
     throw error;
   }
 }
