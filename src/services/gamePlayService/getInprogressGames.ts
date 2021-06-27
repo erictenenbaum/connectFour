@@ -12,7 +12,7 @@ export async function getInprogressGamesService(): Promise<string[]> {
     logger.info({ inProgressGames }, "In Progress Games");
     return inProgressGames;
   } catch (error) {
-    logger.debug({ err: error }, "Error in Get In Progress Games Service");
+    logger.info({ err: error }, "Error in Get In Progress Games Service");
     throw error;
   }
 }

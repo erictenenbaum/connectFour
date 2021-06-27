@@ -34,7 +34,7 @@ export async function createGame(
       !createGameRequest.rows ||
       !isValidateCreateGameRequest(createGameRequest)
     ) {
-      logger.debug(
+      logger.info(
         { createGameRequest },
         "create game request didn't pass validation"
       );
@@ -49,7 +49,7 @@ export async function createGame(
     logger.info({ createdGame }, "successfully created game");
     return JSend.success(createdGame);
   } catch (error) {
-    logger.debug({ err: error }, "Error caught in create game handler");
+    logger.info({ err: error }, "Error caught in create game handler");
     return JSend.error(ErrorMessages.InternalServerError);
   }
 }

@@ -36,7 +36,7 @@ export async function getMove(
     logger.info({ moveResponseItem }, "successful Get Move");
     return JSend.success(moveResponseItem, StatusCodes.OK);
   } catch (error) {
-    logger.debug({ err: error }, "Error in Get Move Handler");
+    logger.info({ err: error }, "Error in Get Move Handler");
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,

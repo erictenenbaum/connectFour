@@ -15,13 +15,13 @@ export async function removePlayerService(
   const dynamoGameItem: dynamoGameItem | null = await getDynamoGameItem(gameId);
 
   if (!dynamoGameItem || !dynamoGameItem.game_players.includes(playerId)) {
-    logger.debug("Game or Player Not Found");
+    logger.info("Game or Player Not Found");
     throw Error(ErrorMessages.GameMovesNotFound);
   }
 
   // sparse index - game state will only exist on "in progress" games
   if (!dynamoGameItem.game_state) {
-    logger.debug("Game is Over - Cannot Remove Player from DONE game");
+    logger.info("Game is Over - Cannot Remove Player from DONE game");
     throw Error(ErrorMessages.GameIsOver);
   }
 

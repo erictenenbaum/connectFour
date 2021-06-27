@@ -39,7 +39,7 @@ export async function getMovesByGameId(
     logger.info({ result: dynamoMoveItems }, "Dynamo Response");
     return dynamoMoveItems;
   } catch (error) {
-    logger.debug({ err: error }, "Error in the Get Moves Model");
+    logger.info({ err: error }, "Error in the Get Moves Model");
     throw error;
   }
 }

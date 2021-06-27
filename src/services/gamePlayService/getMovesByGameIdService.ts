@@ -28,7 +28,7 @@ export async function getMovesByGameIdService(
     logger.info({ moves: dynamoMoveItems }, "Moves");
 
     if (!dynamoMoveItems.length) {
-      logger.debug("No Moves Found");
+      logger.info("No Moves Found");
       throw new Error(ErrorMessages.GameMovesNotFound);
     }
 
@@ -63,7 +63,7 @@ export async function getMovesByGameIdService(
 
     return getMovesByGameIdResponse;
   } catch (error) {
-    logger.debug({ err: error }, "Error in Get Moves Service");
+    logger.info({ err: error }, "Error in Get Moves Service");
     throw error;
   }
 }

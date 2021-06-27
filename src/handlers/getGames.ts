@@ -27,7 +27,7 @@ export async function getGames(
 
     return JSend.success({ games: gameIds }, StatusCodes.OK);
   } catch (error) {
-    logger.debug({ err: error }, "Error in Get Games Handler");
+    logger.info({ err: error }, "Error in Get Games Handler");
     return JSend.error(
       ErrorMessages.InternalServerError,
       null,

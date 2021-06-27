@@ -29,23 +29,23 @@ export async function createMoveService(
     );
 
     if (!dynamoGameItem) {
-      logger.debug("Game Not Found - Service");
+      logger.info("Game Not Found - Service");
       throw new Error(ErrorMessages.GameMovesNotFound);
     }
 
     if (!isLegalMove(playerId, column, dynamoGameItem)) {
-      logger.debug("Illegal Move - Service");
+      logger.info("Illegal Move - Service");
       throw new Error(ErrorMessages.IllegalMove);
     }
 
     if (dynamoGameItem.game_current_player !== playerId) {
-      logger.debug("Not Player's Turn - Service");
+      logger.info("Not Player's Turn - Service");
       throw new Error(ErrorMessages.NotPlayerTurn);
     }
 
     const lastRowInColumn: number = await getLastRowInColumn(gameId, column);
     if (lastRowInColumn === dynamoGameItem.game_rows) {
-      logger.debug("Illegal Move - Not enough space in collumm to make move");
+      logger.info("Illegal Move - Not enough space in collumm to make move");
       throw new Error(ErrorMessages.IllegalMove);
     }
 

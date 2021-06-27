@@ -21,7 +21,7 @@ export async function createMove(
       validateAndParseInput(event);
 
     if (!createMoveRequest) {
-      logger.debug(
+      logger.info(
         { createMoveRequest },
         "create move request didn't pass validation"
       );
@@ -37,7 +37,7 @@ export async function createMove(
     logger.info({ createMoveRequest }, "successfully created move");
     return JSend.success({ move: createMoveResponse });
   } catch (error) {
-    logger.debug({ err: error }, "Error caught in create move handler");
+    logger.info({ err: error }, "Error caught in create move handler");
     switch (error.message) {
       case ErrorMessages.GameMovesNotFound:
         return JSend.error(

@@ -54,7 +54,7 @@ export async function createGameService(
       rows: createGameRequest.rows,
     };
   } catch (error) {
-    logger.debug({ err: error }, "Error in Create Game Service");
+    logger.info({ err: error }, "Error in Create Game Service");
     throw new Error(ErrorMessages.WriteRequestFailed);
   }
 }

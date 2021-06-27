@@ -40,7 +40,7 @@ export async function removePlayer(
     );
     return JSend.success(null, StatusCodes.ACCEPTED);
   } catch (error) {
-    logger.debug({ err: error }, "Error in Remove Player Handler");
+    logger.info({ err: error }, "Error in Remove Player Handler");
     if (error.message === ErrorMessages.GameMovesNotFound) {
       return JSend.error(
         ErrorMessages.GameMovesNotFound,

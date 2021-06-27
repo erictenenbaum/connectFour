@@ -33,7 +33,7 @@ export async function getMoveByMoveNumber(
     logger.info({ result: getItemOutput }, "Dynamo Response");
 
     if (!getItemOutput.Item) {
-      logger.debug("Move not found - Model");
+      logger.info("Move not found - Model");
       throw new Error(ErrorMessages.GameMovesNotFound);
     }
 

@@ -14,7 +14,7 @@ export async function getGameByIdService(
   try {
     const game: dynamoGameItem | null = await getDynamoGameItem(gameId);
     if (!game) {
-      logger.debug("Game Not Found");
+      logger.info("Game Not Found");
       throw Error(ErrorMessages.GameMovesNotFound);
     }
 
@@ -30,7 +30,7 @@ export async function getGameByIdService(
     logger.info({ response }, `Game ${gameId} Service Layer Response`);
     return response;
   } catch (error) {
-    logger.debug({ err: error }, "Error in Get Game By Id Service");
+    logger.info({ err: error }, "Error in Get Game By Id Service");
     throw error;
   }
 }
