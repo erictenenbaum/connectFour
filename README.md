@@ -1,4 +1,4 @@
-# Connect Four (Drop Token)
+# Serverless Connect Four
 
 ## Setup
 
