@@ -1,4 +1,4 @@
-# Connect Four (Drop Token)
+# Serverless Connect Four
 
 ## Setup
 
@@ -33,15 +33,3 @@
 ```
 serverless invoke local --function functionName
 ```
-
-**Invoke the function -- This Service is Already Deployed and Accessible publically without the need for an API Key**
-
-endpoints:
-
-- POST - https://o464bnwzrd.execute-api.us-west-1.amazonaws.com/local/drop_token
-- POST - https://o464bnwzrd.execute-api.us-west-1.amazonaws.com/local/drop_token/{gameId}/{playerId}
-- GET - https://o464bnwzrd.execute-api.us-west-1.amazonaws.com/local/drop_token
-- GET - https://o464bnwzrd.execute-api.us-west-1.amazonaws.com/local/drop_token/{gameId}
-- GET - https://o464bnwzrd.execute-api.us-west-1.amazonaws.com/local/drop_token/{gameId}/moves
-- GET - https://o464bnwzrd.execute-api.us-west-1.amazonaws.com/local/drop_token/{gameId}/moves/{move_number}
-- DELETE - https://o464bnwzrd.execute-api.us-west-1.amazonaws.com/local/drop_token/{gameId}/{playerId}
