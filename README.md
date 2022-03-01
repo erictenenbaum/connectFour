@@ -34,7 +34,7 @@
 serverless invoke local --function functionName
 ```
 
-**Invoke the function - This Service is Already Deployed and Accessible publically without the need for an API Key**
+**Invoke the function -- This Service is Already Deployed and Accessible publically without the need for an API Key**
 
 endpoints:
 
